@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="QCAR_Dataset_config.xsd">
+  <TargetSet version="5.0" toolVersion="4.2.0">
+    <ObjectTarget bbox="0.0 0.0 0.0 0.1 0.1 0.1" captureAppVersion="6.5.0" lastSaved="2018-04-24 11:10:44" name="part2" targetId="7f21187c8e7046809ba75949edf54706" version="2.0" />
+    <ObjectTarget bbox="0.0 0.0 0.0 0.1 0.1 0.1" captureAppVersion="6.5.0" lastSaved="2018-04-24 10:58:46" name="part1" targetId="ba2b9b5ef75646f29c80696b605c2dcf" version="2.0" />
+    <ObjectTarget bbox="0.0 0.0 0.0 0.1 0.1 0.1" captureAppVersion="6.5.0" lastSaved="2018-04-24 12:01:16" name="step4" targetId="93ebab4eb64b499ab5348612a8410638" version="2.0" />
+    <ObjectTarget bbox="0.0 0.0 0.0 0.1 0.1 0.1" captureAppVersion="6.5.0" lastSaved="2018-04-24 10:34:49" name="part4" targetId="30a12050c1944d2f9e4281eb32ddcbcb" version="2.0" />
+    <ObjectTarget bbox="0.0 0.0 0.0 0.1 0.1 0.1" captureAppVersion="6.5.0" lastSaved="2018-04-24 11:52:29" name="step3" targetId="763b7ba52ea746928ad5d448dec7ad2d" version="2.0" />
+    <ObjectTarget bbox="0.0 0.0 0.0 0.1 0.1 0.1" captureAppVersion="6.5.0" lastSaved="2018-04-24 11:47:29" name="step2" targetId="702c314bb8af49158a640059838acac6" version="2.0" />
+    <ObjectTarget bbox="0.0 0.0 0.0 0.1 0.1 0.1" captureAppVersion="6.5.0" lastSaved="2018-04-24 11:22:55" name="part3" targetId="622cd898957a4733ac2cdcaca25faa39" version="2.0" />
+  </TargetSet>
+</QCARInfo>

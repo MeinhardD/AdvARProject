@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="QCAR_Dataset_config.xsd">
+  <Tracking>
+    <ObjectTarget name="part2" />
+    <ObjectTarget name="part1" />
+    <ObjectTarget name="step4" />
+    <ObjectTarget name="part4" />
+    <ObjectTarget name="step3" />
+    <ObjectTarget name="step2" />
+    <ObjectTarget name="part3" />
+  </Tracking>
+</QCARConfig>
