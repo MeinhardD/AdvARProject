@@ -16,8 +16,8 @@ MonoBehaviour:
     ufoLicenseKey: QVlsa2RoZi8vLy8vQUFBQUtIUXArakJjSlU2Z2lWYWxMaGUreHZvbFRTM21WZ0FoMnF1MWVkQkY1ZmxUVGhsMDFrMGVpNUJndnM3OG9IQW1LZEUwMy9uNldBdHRYT2Y5a1Irc1FEVlJESUl1anVSNm8rc2ZveUIzcUxMUTRyQVRuRWhBQkk1R2hhTCtteHRzbCszSXExSWxTM3g0K3JaQWpvVG45cC9IanhUTDh2WWNWU3FtYTA5ekMzSzBlSEVwd3BESlF4RlY4RGFZdUJBbkxEbDFXZG1ud3BZbk5LVGhaVnZhYzdGaXZaK0xuRWYxbExnOGZYSzJVUXlodHlQNU1uSXJpRlNneE9oQksxQ2Ridlg4R0tuVXVveUZmM1ViSlQ1NWhMTnYxWXVJblNUT2NWZks4Ni9MdTNZMDI3OEZqbVRUTW54SUhFVzBySVpkbG5MMjNrOEtWV29QODBaejIrNUxxNUdZa2JjMk5aOG9Rc0tVWnc5YkJJQnM=
     delayedInitialization: 0
     cameraDeviceModeSetting: -1
-    maxSimultaneousImageTargets: 1
-    maxSimultaneousObjectTargets: 1
+    maxSimultaneousImageTargets: 2
+    maxSimultaneousObjectTargets: 2
     useDelayedLoadingObjectTargets: 0
     cameraDirection: 0
     mirrorVideoBackground: 0
@@ -44,8 +44,10 @@ MonoBehaviour:
       ContainsMagnet: 0
   databaseLoad:
     dataSetsToLoad:
+    - AdvARProject
     - AdvARProject_OT
     dataSetsToActivate:
+    - AdvARProject
     - AdvARProject_OT
   videoBackground:
     clippingMode: 0
