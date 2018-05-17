@@ -51,9 +51,9 @@ public class TrackingModels : MonoBehaviour {
                     model2.transform.position += increment;
                 }
 
-                Debug.Log("The z position of Model 1 is: " + model1.transform.position.z);
-                Debug.Log("The z position of Model 2 is: " + model2.transform.position.z);
-                Debug.Log("Counter: " + counter);
+                //Debug.Log("The z position of Model 1 is: " + model1.transform.position.z);
+                //Debug.Log("The z position of Model 2 is: " + model2.transform.position.z);
+                //Debug.Log("Counter: " + counter);
             }
             else
                 Debug.Log("Can't find the next part");
