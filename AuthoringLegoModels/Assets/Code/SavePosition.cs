@@ -15,19 +15,38 @@ public class SavePosition : MonoBehaviour
         Debug.Log("Saved position");
         model1 = GameObject.Find("Image_Part1");
         model2 = GameObject.Find("Image_Part2");
+        string path = Directory.GetCurrentDirectory() + "\\Assets\\Code\\Positions.txt";
 
-        if (model1Pos == null)
+        if (model1Pos.Equals(new Vector3(0.0f, 0.0f, 0.0f)))
         {
             model1Pos = model1.transform.position;
-            File.WriteAllText(Directory.GetCurrentDirectory() + "\\Positions.txt", model1Pos.ToString());
+
+            if (!File.Exists(path))
+            {
+                File.Create(path).Dispose(); ;
+                TextWriter tw = new StreamWriter(path);
+                tw.WriteLine(model1Pos.ToString());
+                tw.Close();
+            }
+            else if (File.Exists(path))
+            {
+                using (var tw = new StreamWriter(path, true))
+                {
+                    tw.WriteLine(model1Pos.ToString());
+                    tw.Close();
+                }
+            }
         }
-        else if (model1 != null && model2Pos == null)
+        else if (!model1Pos.Equals(new Vector3(0.0f, 0.0f, 0.0f)) && model2Pos.Equals(new Vector3(0.0f, 0.0f, 0.0f)))
         {
             model2Pos = model2.transform.position;
-            File.WriteAllText(Directory.GetCurrentDirectory() + "\\Positions.txt", model2Pos.ToString());
+            using (var tw = new StreamWriter(path, true))
+            {
+                tw.WriteLine(model2Pos.ToString());
+                tw.Close();
+            }
         }
-        Debug.Log(Directory.GetCurrentDirectory());
-
+        Debug.Log(path);
     }
 
 }
