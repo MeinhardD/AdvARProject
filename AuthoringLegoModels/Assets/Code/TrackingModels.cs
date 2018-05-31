@@ -7,13 +7,21 @@ public class TrackingModels : MonoBehaviour {
 
     public ImageTargetBehaviour currentPart;
     public ImageTargetBehaviour nextPart;
+
     private GameObject model1;
     private GameObject model2;
+
     private GameObject model1Target;
     private GameObject model2Target;
+
+    private Vector3 targetPos;
     private Vector3 model2LocalPos;
+
     private Vector3 relativeVector;
-    private Vector3 model2Pos;
+    private Vector3 relativeEulerAngles;
+    private Vector3 targetEulerAngles;
+    private Quaternion targetRotation;
+
     string path;
 
     // Use this for initialization
@@ -23,7 +31,7 @@ public class TrackingModels : MonoBehaviour {
         model1Target = GameObject.Find("Image_Part1");
         model2Target = GameObject.Find("Image_Part2");
         model2LocalPos = model2.transform.localPosition;
-        path = Directory.GetCurrentDirectory() + "\\Assets\\Code\\Positions.txt";
+        path = Directory.GetCurrentDirectory() + "\\Assets\\Code\\instructions.txt";
 
         // Get positions from text file
         string positions = "";
@@ -35,8 +43,9 @@ public class TrackingModels : MonoBehaviour {
 
             // Parse into Vector3
             string[] lines = positions.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-            Debug.Log("Line array: " + lines[0]);
+            Debug.Log("Line array: " + lines[0] + ", " + lines[1]);
             relativeVector = StringToVector3(lines[0]);
+            relativeEulerAngles = StringToVector3(lines[1]);
         }
     }
 
@@ -54,21 +63,28 @@ public class TrackingModels : MonoBehaviour {
         {
             if (tracked2)
             {
-                if (!relativeVector.Equals(new Vector3(0.0f, 0.0f, 0.0f)))
+                if (!relativeVector.Equals(new Vector3(0.0f, 0.0f, 0.0f)) && !relativeEulerAngles.Equals(new Vector3(0.0f, 0.0f, 0.0f)))
                 {
                     // Calculate target position
-                    model2Pos = model1Target.transform.position + relativeVector + model2LocalPos;
+                    targetPos = model1Target.transform.position + relativeVector + model2LocalPos;
 
                     // Calculate direction vector
-                    Vector3 increment = (model2Pos - model2.transform.position).normalized / 3;
+                    Vector3 increment = (targetPos - model2.transform.position).normalized / 3;
+
+                    // Calculate target rotation
+                    targetEulerAngles = model1.transform.eulerAngles + relativeEulerAngles;
+                    targetRotation = Quaternion.Euler(targetEulerAngles);
+
+                    // Set model2 rotation to target rotation
+                    model2.transform.rotation = targetRotation;
 
                     float epsilon = 0.1f;
-                    if (Mathf.Abs(model2Pos.z - model2.transform.position.z) < epsilon
+                    if (Mathf.Abs(targetPos.z - model2.transform.position.z) < epsilon
                         && counter < 50)
                     {
                         counter += 1;
                     }
-                    else if (Mathf.Abs(model2Pos.z - model2.transform.position.z) < epsilon
+                    else if (Mathf.Abs(targetPos.z - model2.transform.position.z) < epsilon
                         && counter >= 50)
                     {
                         counter = 0;
@@ -84,7 +100,7 @@ public class TrackingModels : MonoBehaviour {
                     Debug.Log("Counter: " + counter);
                 }
                 else
-                    Debug.Log("Was not able to get the relative vector");
+                    Debug.Log("Was not able to get the relative vector or the relative euler angles");
             }
             else
                 Debug.Log("Can't find the next part");
