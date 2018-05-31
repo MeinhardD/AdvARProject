@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using Vuforia;
@@ -11,9 +9,10 @@ public class TrackingModels : MonoBehaviour {
     public ImageTargetBehaviour nextPart;
     private GameObject model1;
     private GameObject model2;
+    private GameObject model1Target;
     private GameObject model2Target;
     private Vector3 model2LocalPos;
-    private Vector3 model1Pos;
+    private Vector3 relativeVector;
     private Vector3 model2Pos;
     string path;
 
@@ -21,6 +20,7 @@ public class TrackingModels : MonoBehaviour {
 	void Start () {
         model1 = GameObject.Find("Model 1");
         model2 = GameObject.Find("Model 2");
+        model1Target = GameObject.Find("Image_Part1");
         model2Target = GameObject.Find("Image_Part2");
         model2LocalPos = model2.transform.localPosition;
         path = Directory.GetCurrentDirectory() + "\\Assets\\Code\\Positions.txt";
@@ -32,11 +32,12 @@ public class TrackingModels : MonoBehaviour {
             StreamReader reader = new StreamReader(path);
             positions = reader.ReadToEnd();
             reader.Close();
+
+            // Parse into Vector3
+            string[] lines = positions.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            Debug.Log("Line array: " + lines[0]);
+            relativeVector = StringToVector3(lines[0]);
         }
-        string[] lines = positions.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-        Debug.Log("Line array: " + lines[0] + ", " + lines[1]);
-        model1Pos = StringToVector3(lines[0]);
-        model2Pos = StringToVector3(lines[1]);
     }
 
     int toggle = 1;
@@ -47,34 +48,43 @@ public class TrackingModels : MonoBehaviour {
         bool tracked1 = currentPart.CurrentStatus == ImageTargetBehaviour.Status.TRACKED;
         bool tracked2 = nextPart.CurrentStatus == ImageTargetBehaviour.Status.TRACKED;
 
-        model1.transform.position = model1Pos;
+        //model1.transform.position = model1Pos;
 
         if (tracked1)
         {
             if (tracked2)
             {
-                Vector3 increment = (model2Pos - model2.transform.position).normalized / 3;
+                if (!relativeVector.Equals(new Vector3(0.0f, 0.0f, 0.0f)))
+                {
+                    // Calculate target position
+                    model2Pos = model1Target.transform.position + relativeVector + model2LocalPos;
 
-                float epsilon = 0.1f;
-                if (Mathf.Abs(model1.transform.position.z - model2.transform.position.z) < epsilon
-                    && counter < 50)
-                {
-                    counter += 1;                   
-                }
-                else if (Mathf.Abs(model1.transform.position.z - model2.transform.position.z) < epsilon
-                    && counter >= 50)
-                {
-                    counter = 0;
-                    model2.transform.localPosition = model2LocalPos;
+                    // Calculate direction vector
+                    Vector3 increment = (model2Pos - model2.transform.position).normalized / 3;
+
+                    float epsilon = 0.1f;
+                    if (Mathf.Abs(model2Pos.z - model2.transform.position.z) < epsilon
+                        && counter < 50)
+                    {
+                        counter += 1;
+                    }
+                    else if (Mathf.Abs(model2Pos.z - model2.transform.position.z) < epsilon
+                        && counter >= 50)
+                    {
+                        counter = 0;
+                        model2.transform.localPosition = model2LocalPos;
+                    }
+                    else
+                    {
+                        model2.transform.position += increment;
+                    }
+
+                    //Debug.Log("The z position of Model 1 is: " + model1.transform.position.z);
+                    //Debug.Log("The z position of Model 2 is: " + model2.transform.position.z);
+                    Debug.Log("Counter: " + counter);
                 }
                 else
-                {
-                    model2.transform.position += increment;
-                }
-
-                //Debug.Log("The z position of Model 1 is: " + model1.transform.position.z);
-                //Debug.Log("The z position of Model 2 is: " + model2.transform.position.z);
-                //Debug.Log("Counter: " + counter);
+                    Debug.Log("Was not able to get the relative vector");
             }
             else
                 Debug.Log("Can't find the next part");
