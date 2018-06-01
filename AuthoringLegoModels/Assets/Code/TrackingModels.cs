@@ -22,6 +22,8 @@ public class TrackingModels : MonoBehaviour {
     private Vector3 targetEulerAngles;
     private Quaternion targetRotation;
 
+    public static bool isConsumer;
+
     string path;
 
     // Use this for initialization
@@ -57,60 +59,61 @@ public class TrackingModels : MonoBehaviour {
         bool tracked1 = currentPart.CurrentStatus == ImageTargetBehaviour.Status.TRACKED;
         bool tracked2 = nextPart.CurrentStatus == ImageTargetBehaviour.Status.TRACKED;
 
-        //model1.transform.position = model1Pos;
-
-        if (tracked1)
+        if (isConsumer)
         {
-            if (tracked2)
+            if (tracked1)
             {
-                if (!relativeVector.Equals(new Vector3(0.0f, 0.0f, 0.0f)) && !relativeEulerAngles.Equals(new Vector3(0.0f, 0.0f, 0.0f)))
+                if (tracked2)
                 {
-                    // Calculate target position
-                    targetPos = model1Target.transform.position + relativeVector + model2LocalPos;
-
-                    // Calculate direction vector
-                    Vector3 increment = (targetPos - model2.transform.position).normalized / 3;
-
-                    // Calculate target rotation
-                    targetEulerAngles = model1.transform.eulerAngles + relativeEulerAngles;
-                    targetRotation = Quaternion.Euler(targetEulerAngles);
-
-                    // Set model2 rotation to target rotation
-                    model2.transform.rotation = targetRotation;
-
-                    float epsilon = 0.1f;
-                    if (Mathf.Abs(targetPos.z - model2.transform.position.z) < epsilon
-                        && counter < 50)
+                    if (!relativeVector.Equals(new Vector3(0.0f, 0.0f, 0.0f)) && !relativeEulerAngles.Equals(new Vector3(0.0f, 0.0f, 0.0f)))
                     {
-                        counter += 1;
-                    }
-                    else if (Mathf.Abs(targetPos.z - model2.transform.position.z) < epsilon
-                        && counter >= 50)
-                    {
-                        counter = 0;
-                        model2.transform.localPosition = model2LocalPos;
+                        // Calculate target position
+                        targetPos = model1Target.transform.position + relativeVector + model2LocalPos;
+
+                        // Calculate direction vector
+                        Vector3 increment = (targetPos - model2.transform.position).normalized / 3;
+
+                        // Calculate target rotation
+                        //targetEulerAngles = model1.transform.eulerAngles + relativeEulerAngles;
+                        //targetRotation = Quaternion.Euler(targetEulerAngles);
+
+                        // Set model2 rotation to target rotation
+                        //model2.transform.rotation = targetRotation;
+
+                        float epsilon = 0.1f;
+                        if (Mathf.Abs(targetPos.z - model2.transform.position.z) < epsilon
+                            && counter < 50)
+                        {
+                            counter += 1;
+                        }
+                        else if (Mathf.Abs(targetPos.z - model2.transform.position.z) < epsilon
+                            && counter >= 50)
+                        {
+                            counter = 0;
+                            model2.transform.localPosition = model2LocalPos;
+                        }
+                        else
+                        {
+                            model2.transform.position += increment;
+                        }
+
+                        //Debug.Log("The z position of Model 1 is: " + model1.transform.position.z);
+                        //Debug.Log("The z position of Model 2 is: " + model2.transform.position.z);
+                        Debug.Log("Counter: " + counter);
                     }
                     else
-                    {
-                        model2.transform.position += increment;
-                    }
-
-                    //Debug.Log("The z position of Model 1 is: " + model1.transform.position.z);
-                    //Debug.Log("The z position of Model 2 is: " + model2.transform.position.z);
-                    Debug.Log("Counter: " + counter);
+                        Debug.Log("Was not able to get the relative vector or the relative euler angles");
                 }
                 else
-                    Debug.Log("Was not able to get the relative vector or the relative euler angles");
+                    Debug.Log("Can't find the next part");
             }
             else
-                Debug.Log("Can't find the next part");
-        }
-        else
-        {
-            if (tracked2)
-                Debug.Log("Can't find the current part");
-            else
-                Debug.Log("Can't find either part");
+            {
+                if (tracked2)
+                    Debug.Log("Can't find the current part");
+                else
+                    Debug.Log("Can't find either part");
+            }
         }
     }
 
