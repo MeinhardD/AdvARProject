@@ -9,7 +9,7 @@ public class TrackingModels : MonoBehaviour {
     public ImageTargetBehaviour intermediateMachineImagetargetBehavior;
     public ImageTargetBehaviour componentImagetargetBehavior;
 
-    //private GameObject intermediateMachineModel;
+    private GameObject intermediateMachineModel;
     private GameObject componentModel;
     private GameObject[] componentModels;
     private GameObject intermediateMachineTarget;
@@ -40,7 +40,7 @@ public class TrackingModels : MonoBehaviour {
         {
             componentModels[i-1] = GameObject.Find("Model " + i);
         }
-        //intermediateMachineModel = GameObject.Find("Model " + (index + 1));
+        intermediateMachineModel = componentModels[index];
         componentModel = componentModels[index + 1];
         intermediateMachineTarget = GameObject.Find("Image_Part" + (index + 1));
         componentTarget = GameObject.Find("Image_Part" + (index + 2));
@@ -86,11 +86,17 @@ public class TrackingModels : MonoBehaviour {
                     if (File.Exists(path))
                     {
                         Vector3 previousPos = intermediateMachineTarget.transform.position;
+                        Vector3 previouisAngles = intermediateMachineModel.transform.eulerAngles;
+
                         // Set previous components
                         for (int i = index; i > 0; i--)
                         {
-                            componentModels[i-1].transform.position = previousPos + (-1* relativeVectors[i-1]) + (-1*componentModels[i-1].transform.localPosition);
+                            componentModels[i - 1].transform.position = previousPos + (-1 * relativeVectors[i - 1]) + (-1 * componentModels[i - 1].transform.localPosition);
                             previousPos = componentModels[i - 1].transform.position;
+
+                            Vector3 wantedEulerAngles = previouisAngles + (-1 * relativeEulerAngless[i-1]);
+                            componentModels[i - 1].transform.rotation = Quaternion.Euler(wantedEulerAngles);
+                            previouisAngles = wantedEulerAngles;
                         }
 
                         // Calculate target position
@@ -100,11 +106,11 @@ public class TrackingModels : MonoBehaviour {
                         Vector3 increment = (targetPos - componentModel.transform.position).normalized / 3;
 
                         // Calculate target rotation
-                        //targetEulerAngles = model1.transform.eulerAngles + relativeEulerAngles;
-                        //targetRotation = Quaternion.Euler(targetEulerAngles);
+                        targetEulerAngles = intermediateMachineModel.transform.eulerAngles + relativeEulerAngless[index-1];
+                        targetRotation = Quaternion.Euler(targetEulerAngles);
 
                         // Set model2 rotation to target rotation
-                        //model2.transform.rotation = targetRotation;
+                        componentModel.transform.rotation = targetRotation;
 
                         float epsilon = 0.1f;
                         if (Mathf.Abs(targetPos.z - componentModel.transform.position.z) < epsilon
