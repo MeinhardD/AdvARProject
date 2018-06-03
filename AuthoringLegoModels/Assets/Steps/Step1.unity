@@ -1044,6 +1044,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ae2509327f180144afcffbba4fcbbe9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  intermediateMachine: {fileID: 1989961239}
+  component: {fileID: 680102178}
 --- !u!1 &712296636
 GameObject:
   m_ObjectHideFlags: 0
@@ -1362,15 +1364,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400000, guid: 7260b76052515c1448e2f1f8c1941ac5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.907
+      value: 0.847
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 7260b76052515c1448e2f1f8c1941ac5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.8
+      value: -0.704
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 7260b76052515c1448e2f1f8c1941ac5, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.714
+      value: -0.679
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 7260b76052515c1448e2f1f8c1941ac5, type: 3}
       propertyPath: m_LocalRotation.x
@@ -1398,15 +1400,15 @@ Prefab:
       objectReference: {fileID: 9100000, guid: 0b7b2359d7b247948aa75dac87ed1e9a, type: 2}
     - target: {fileID: 400000, guid: 7260b76052515c1448e2f1f8c1941ac5, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.023
+      value: 0.02
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 7260b76052515c1448e2f1f8c1941ac5, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.023
+      value: 0.02
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 7260b76052515c1448e2f1f8c1941ac5, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.023
+      value: 0.02
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 7260b76052515c1448e2f1f8c1941ac5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
