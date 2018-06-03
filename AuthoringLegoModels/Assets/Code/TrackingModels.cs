@@ -2,62 +2,80 @@
 using System.IO;
 using UnityEngine;
 using Vuforia;
+using UnityEngine.SceneManagement;
 
 public class TrackingModels : MonoBehaviour {
 
-    public ImageTargetBehaviour currentPart;
-    public ImageTargetBehaviour nextPart;
+    public ImageTargetBehaviour intermediateMachineImagetargetBehavior;
+    public ImageTargetBehaviour componentImagetargetBehavior;
 
-    private GameObject model1;
-    private GameObject model2;
-
-    private GameObject model1Target;
-    private GameObject model2Target;
+    //private GameObject intermediateMachineModel;
+    private GameObject componentModel;
+    private GameObject[] componentModels;
+    private GameObject intermediateMachineTarget;
+    private GameObject componentTarget;
 
     private Vector3 targetPos;
-    private Vector3 model2LocalPos;
+    private Vector3 componentModelLocalPos;
 
     private Vector3 relativeVector;
     private Vector3 relativeEulerAngles;
     private Vector3 targetEulerAngles;
     private Quaternion targetRotation;
 
+    private Vector3[] relativeVectors;
+    private Vector3[] relativeEulerAngless;
+
     public static bool isConsumer;
+    private int index;
 
     string path;
 
     // Use this for initialization
 	void Start () {
-        model1 = GameObject.Find("Model 1");
-        model2 = GameObject.Find("Model 2");
-        model1Target = GameObject.Find("Image_Part1");
-        model2Target = GameObject.Find("Image_Part2");
-        model2LocalPos = model2.transform.localPosition;
+        Scene scene = SceneManager.GetActiveScene();
+        index = scene.buildIndex;
+        componentModels = new GameObject[index + 2];
+        for(int i = 1; i <= index + 2; i++)
+        {
+            componentModels[i-1] = GameObject.Find("Model " + i);
+        }
+        //intermediateMachineModel = GameObject.Find("Model " + (index + 1));
+        componentModel = componentModels[index + 1];
+        intermediateMachineTarget = GameObject.Find("Image_Part" + (index + 1));
+        componentTarget = GameObject.Find("Image_Part" + (index + 2));
+        componentModelLocalPos = componentModels[index + 1].transform.localPosition;
         path = Directory.GetCurrentDirectory() + "\\Assets\\Code\\instructions.txt";
 
         // Get positions from text file
-        string positions = "";
+        string instructionString = "";
         if (File.Exists(path))
         {
             StreamReader reader = new StreamReader(path);
-            positions = reader.ReadToEnd();
+            instructionString = reader.ReadToEnd();
             reader.Close();
 
             // Parse into Vector3
-            string[] lines = positions.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            string[] lines = instructionString.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
             Debug.Log("Line array: " + lines[0] + ", " + lines[1]);
-            relativeVector = StringToVector3(lines[0]);
-            relativeEulerAngles = StringToVector3(lines[1]);
+
+            relativeVectors = new Vector3[index + 1];
+            relativeEulerAngless = new Vector3[index + 1];
+            for (int i = 0; i <= index*2; i += 2)
+            {
+                relativeVectors[i/2] = StringToVector3(lines[i]);
+                relativeEulerAngless[i/2] = StringToVector3(lines[i+1]);
+            }
         }
     }
 
-    int toggle = 1;
+    //int toggle = 1;
     int counter = 0;
 	// Update is called once per frame
 	void Update () {
 
-        bool tracked1 = currentPart.CurrentStatus == ImageTargetBehaviour.Status.TRACKED;
-        bool tracked2 = nextPart.CurrentStatus == ImageTargetBehaviour.Status.TRACKED;
+        bool tracked1 = intermediateMachineImagetargetBehavior.CurrentStatus == ImageTargetBehaviour.Status.TRACKED;
+        bool tracked2 = componentImagetargetBehavior.CurrentStatus == ImageTargetBehaviour.Status.TRACKED;
 
         if (isConsumer)
         {
@@ -65,13 +83,21 @@ public class TrackingModels : MonoBehaviour {
             {
                 if (tracked2)
                 {
-                    if (!relativeVector.Equals(new Vector3(0.0f, 0.0f, 0.0f)) && !relativeEulerAngles.Equals(new Vector3(0.0f, 0.0f, 0.0f)))
+                    if (File.Exists(path))
                     {
+                        Vector3 previousPos = intermediateMachineTarget.transform.position;
+                        // Set previous components
+                        for (int i = index; i > 0; i--)
+                        {
+                            componentModels[i-1].transform.position = previousPos + (-1* relativeVectors[i-1]) + (-1*componentModels[i-1].transform.localPosition);
+                            previousPos = componentModels[i - 1].transform.position;
+                        }
+
                         // Calculate target position
-                        targetPos = model1Target.transform.position + relativeVector + model2LocalPos;
+                        targetPos = intermediateMachineTarget.transform.position + relativeVectors[index] + componentModelLocalPos;
 
                         // Calculate direction vector
-                        Vector3 increment = (targetPos - model2.transform.position).normalized / 3;
+                        Vector3 increment = (targetPos - componentModel.transform.position).normalized / 3;
 
                         // Calculate target rotation
                         //targetEulerAngles = model1.transform.eulerAngles + relativeEulerAngles;
@@ -81,20 +107,20 @@ public class TrackingModels : MonoBehaviour {
                         //model2.transform.rotation = targetRotation;
 
                         float epsilon = 0.1f;
-                        if (Mathf.Abs(targetPos.z - model2.transform.position.z) < epsilon
+                        if (Mathf.Abs(targetPos.z - componentModel.transform.position.z) < epsilon
                             && counter < 50)
                         {
                             counter += 1;
                         }
-                        else if (Mathf.Abs(targetPos.z - model2.transform.position.z) < epsilon
+                        else if (Mathf.Abs(targetPos.z - componentModel.transform.position.z) < epsilon
                             && counter >= 50)
                         {
                             counter = 0;
-                            model2.transform.localPosition = model2LocalPos;
+                            componentModel.transform.localPosition = componentModelLocalPos;
                         }
                         else
                         {
-                            model2.transform.position += increment;
+                            componentModel.transform.position += increment;
                         }
 
                         //Debug.Log("The z position of Model 1 is: " + model1.transform.position.z);

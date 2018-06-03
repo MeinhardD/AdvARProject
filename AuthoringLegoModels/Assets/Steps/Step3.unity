@@ -637,8 +637,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9754f65c729d0a140a57eb59773568ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentPart: {fileID: 1045369003}
-  nextPart: {fileID: 1299702602}
+  intermediateMachineImagetargetBehavior: {fileID: 1045369003}
+  componentImagetargetBehavior: {fileID: 1299702602}
 --- !u!4 &488440964
 Transform:
   m_ObjectHideFlags: 0
